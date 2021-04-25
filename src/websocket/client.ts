@@ -54,7 +54,7 @@ io.on("connect", (socket) => {
 
     })
 
-    socket.on("client_send_to_admin", async params => {
+    socket.on("client_send_to_admin", async (params) => {
         const { text, socket_admin_id } = params;
 
         const socket_id = socket.id;
