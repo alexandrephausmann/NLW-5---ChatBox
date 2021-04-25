@@ -16,12 +16,13 @@ class ConnectionsService {
         this.connectionRepository = getCustomRepository(ConnectionsRepository)
     }
 
-    async create({ socket_id, admin_id, user_id }: IConnection) {
+    async create({ socket_id, admin_id, user_id, id }: IConnection) {
 
         const connection = this.connectionRepository.create({
             socket_id,
             admin_id,
             user_id,
+            id
         })
 
         await this.connectionRepository.save(connection);
@@ -29,10 +30,20 @@ class ConnectionsService {
     }
 
     async findByUserId(user_id: string) {
-        console.log("user id ", user_id);
         const connection = await this.connectionRepository.findOne({
             user_id
         });
+        return connection;
+    }
+    async findAllWithoutAdmin() {
+        const connections = await this.connectionRepository.find({
+            where: { admin_id: null },
+            relations: ["user"]
+        });
+        return connections;
+    }
+    async findBySocketId(socket_id: string) {
+        const connection = await this.connectionRepository.findOne({ socket_id })
         return connection;
     }
 
